@@ -4,6 +4,7 @@ import json
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 import logging
+import unit_of_work
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
@@ -14,19 +15,30 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     if id:
         try:
-            url = "localhost"  # TODO: Update with appropriate MongoDB connection information
-            client = pymongo.MongoClient(url)
-            database = client['azure']
-            collection = database['advertisements']
-           
-            query = {'_id': ObjectId(id)}
-            result = collection.find_one(query)
-            print("----------result--------")
+            uow = unit_of_work.MongoUnitOfWork()
+            collection_name = 'advertisements'
+            result = uow. get_one(collection_name, id)
 
+            print("----------result--------")
             result = dumps(result)
             print(result)
 
             return func.HttpResponse(result, mimetype="application/json", charset='utf-8')
+
+        # try:
+        #     url = "localhost"  # TODO: Update with appropriate MongoDB connection information
+        #     client = pymongo.MongoClient(url)
+        #     database = client['azure']
+        #     collection = database['advertisements']
+           
+        #     query = {'_id': ObjectId(id)}
+        #     result = collection.find_one(query)
+        #     print("----------result--------")
+
+        #     result = dumps(result)
+        #     print(result)
+
+        #     return func.HttpResponse(result, mimetype="application/json", charset='utf-8')
         except:
             return func.HttpResponse("Database connection error.", status_code=500)
 
