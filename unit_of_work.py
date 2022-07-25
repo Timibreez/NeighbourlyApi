@@ -5,8 +5,8 @@ from pymongo import MongoClient
 
 
 class Config(object):
-    MONGO_URL = os.environ["MongoDBConnString"]
-    MONGO_DB_NAME = os.environ["MongoDBName"]
+    MONGO_URL = 'os.environ["MongoDBConnString"]'
+    MONGO_DB_NAME = 'neighbourly-db'
 
 
 class MongoUnitOfWork:
